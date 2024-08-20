@@ -1,6 +1,6 @@
-import { Component, signal, computed, effect, Signal } from '@angular/core';
+import { Component, signal, Signal } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-function getTimerNoCleanup(
+function getTimer(
   frequency: number,
   cleanAt: number = 0
 ): Signal<number> {
@@ -8,7 +8,6 @@ function getTimerNoCleanup(
   let lastTimeout;
   const loop = () => {
     timer.update((value) => value + 1);
-    console.log('getTimerNoCleanup loop is running', timer());
     lastTimeout = setTimeout(loop, frequency);
     const timerCurrentValue = timer();
     if (cleanAt > 0 && timerCurrentValue === cleanAt) {
@@ -20,7 +19,6 @@ function getTimerNoCleanup(
   lastTimeout = setTimeout(loop, frequency);
 
   return timer;
-  // No more cleanup!
 }
 @Component({
   selector: 'app-root',
@@ -33,8 +31,8 @@ function getTimerNoCleanup(
   `,
 })
 export class PlaygroundComponent {
-  protected readonly noCleanup = getTimerNoCleanup(1000);
-  protected readonly noCleanup123 = getTimerNoCleanup(1000, 10);
+  protected readonly noCleanup = getTimer(1000);
+  protected readonly noCleanup123 = getTimer(1000, 10);
 
   constructor() {}
 }
